@@ -5,7 +5,7 @@ from urllib.parse import quote_plus
 from playwright.sync_api import sync_playwright
 
 
-TARGET_ORDER_ID = "260423-E00000015"
+TARGET_ORDER_ID = "260423-E00000016"
 
 SERVICE_NOW_URL = "https://tshuservicedeskdev2.service-now.com"
 
@@ -49,7 +49,7 @@ def wait_for_completed(external_id, stop_event, timeout_sec=600, poll_interval=5
                 print(f"[SOM] {external_id} state = {state}")
                 last_state = state
 
-            if state == "COMPLETED":
+            if state == "COMPLETED" or state == "FAILED" or state == "HELD":
                 stop_event.set()
                 return True
 

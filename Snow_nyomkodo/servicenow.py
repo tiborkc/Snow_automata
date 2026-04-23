@@ -108,12 +108,14 @@ def main_loop():
             page.wait_for_load_state("networkidle")
 
             rows = page.locator("table#wm_order_table tbody tr.list_row")
+
+            found = False
+
             for i in range(rows.count()):
                 row = rows.nth(i)
                 order_id = row.locator("td").nth(7).inner_text().strip()
                 state = row.locator("td").nth(4).inner_text().strip()
 
-                # Csak a Work In Progress order-eket dolgozzuk fel
                 if order_id == TARGET_ORDER_ID and state == "Work In Progress":
                     number_link = row.locator("td.vt a.linked.formlink").first
                     if number_link.count() > 0:
@@ -122,9 +124,13 @@ def main_loop():
                             page.goto(f"{SERVICE_NOW_URL}/{href}")
                             page.wait_for_load_state("networkidle")
                             process_tasks(page)
+                            found = True
                             break
 
-            # Várakozás a következő iterációig
+            if not found:
+                print("Nincs több feldolgozandó order.")
+                break
+
             time.sleep(5)
 
 

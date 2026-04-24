@@ -16,7 +16,7 @@ RESOLUTION_NOTES = "Automata teszt futtatás"
 
 
 USERNAME = "ictsomldev1"
-PASSWORD = quote_plus("nueNySgYn0kZXH1t")
+PASSWORD = quote_plus("SOM_JELSZO_HELYE")
 
 MONGO_URI = (
     f"mongodb://{USERNAME}:{PASSWORD}@localhost:27225/ictsoml?authSource=ictsoml"

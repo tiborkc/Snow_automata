@@ -30,7 +30,7 @@ def get_collection():
     return db["service-order"]
 
 
-def wait_for_completed(external_id, stop_event, timeout_sec=600, poll_interval=5):
+def wait_for_completed(external_id, stop_event, timeout_sec=None, poll_interval=5):
     collection = get_collection()
     start = time.time()
 

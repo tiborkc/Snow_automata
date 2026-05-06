@@ -5,7 +5,7 @@ from urllib.parse import quote_plus
 from playwright.sync_api import sync_playwright
 
 
-TARGET_ORDER_ID = "KT20260424135912"
+TARGET_ORDER_ID = "260505-E00000001"
 
 SERVICE_NOW_URL = "https://tshuservicedeskdev2.service-now.com"
 
@@ -70,6 +70,7 @@ def build_order_list_url(order_id: str) -> str:
         f"u_order_id%3D{order_id}"
         "%5Estate!%3D3"
         "%5Eshort_description!%3DManual%20error%20resolution%20-%20work%20order%20task%20/%20CREATE"
+        "%5Eshort_description!%3DManual%20error%20resolution%20-%20work%20order%20task%20%2F%20DELETE"
     )
 
     return (
@@ -104,6 +105,16 @@ def process_single_task(page, task_href):
             safe_click(page, "#sysverb_update_and_stay")
 
         if safe_click(page, "#tsm_set_resolved"):
+            try:
+                tab = page.locator(
+                    "span.tab_caption_text", has_text="Resolution Information"
+                )
+                if tab.count() > 0:
+                    tab.first.click(force=True)
+                    page.wait_for_timeout(500)
+            except Exception as e:
+                print(f"[TAB ERROR] {e}")
+
             resolver = page.locator(
                 "button.btn-ref.date_time_trigger#wm_task\\.u_resolved_time\\.ui_policy_sensitive"
             )
@@ -197,7 +208,7 @@ def run_snow(stop_event: threading.Event, target_order_id: str):
                                 process_tasks(page)
                                 break
 
-                time.sleep(3)
+                time.sleep(5)
 
         finally:
             browser.close()
